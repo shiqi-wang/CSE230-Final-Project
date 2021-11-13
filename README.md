@@ -3,7 +3,7 @@
 ## {Name}
 
 ## Members
-* YiMing Mao(@[leafeonia](https://github.com/leafeonia))
+* Yiming Mao(@[leafeonia](https://github.com/leafeonia))
 * Shiqi Wang(@[shiqi-wang](https://github.com/shiqi-wang))
 * Xiaoyang Wu(@[BryanWuxiaoyang](https://github.com/BryanWuxiaoyang))
 
