@@ -6,6 +6,13 @@ This project is aimed at implementing a Blackjack game based on Haskell and Bric
 
 ![](pic/demo.png)
 
+### How to start the game
+
+```
+stack build
+stack exec blackjack
+```
+
 ### Rules
 
 The general object of the game is easy to understand: getting a total card score as close to 21 as possible, without going over 21. The score of each card is shown in this table:
