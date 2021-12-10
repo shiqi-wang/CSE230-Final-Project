@@ -44,9 +44,9 @@ data DCard       = DCard { _card    :: Card
 
 data PileType    = SelfP | RivalP deriving (Eq, Show, Ord)
 
-data Pile = Pile { _cards    :: [DCard]     --   piles contain cards
-                 , _pileType :: PileType    -- , and an identifier for location
-                 } deriving (Eq, Show)      -- , since it makes canPlace simpler
+data Pile = Pile { _cards    :: [DCard]     
+                 , _pileType :: PileType    
+                 } deriving (Eq, Show)      
 
 -- GAME TYPES ------------------------------------------------------------------
 

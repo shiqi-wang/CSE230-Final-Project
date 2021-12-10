@@ -4,6 +4,8 @@
 
 This project is aimed at implementing a Blackjack game based on Haskell and Brick library.
 
+![](pic/demo.png)
+
 ### Rules
 
 The general object of the game is easy to understand: getting a total card score as close to 21 as possible, without going over 21. The score of each card is shown in this table:
@@ -35,6 +37,7 @@ The general goal is to create a Blackjack game panel with command line user inte
 * Xiaoyang Wu(@[BryanWuxiaoyang](https://github.com/BryanWuxiaoyang))
 
 ### Links
+
 Project requirements: https://ucsd-cse230.github.io/fa21/project.html<br>
 Brick library: https://github.com/jtdaugherty/brick/
 
@@ -44,57 +47,68 @@ Brick library: https://github.com/jtdaugherty/brick/
 
 ### Data type module
 
-This module defines basic data structures related to the game. 
+This module defines basic data structures related to the game. Important data types include:
 
-**card** 
+**Card** 
 
 There are various attributes of a card. In this module, we first define data type describing a single card. Such data structure should include:
 
-+ Value. The value of a card has a range from 11. For 'A', the value is stored as 11 but would be further checked to choose from 1 or 11 when actually making the calculation.
-+ Character. The character on the card include 'A', 'J', 'Q', 'K' and '2' to '10'.
-+ Suit. Four suits of a card also needs to be defined here.
++ Rank: the rank on the card include 'A', 'J', 'Q', 'K' and '2' to '10'.
++ Suit: four suits of a card also needs to be defined here.
++ Face direction: this attribute decides whether the rank and suit of a card will be rendered or hidden in the user interface.
 
-**card pile**
+**Game state**
 
-Both the game player and the dealer have card piles, so we need to define a data structure of card piles as well. Notice that the status of card piles may not be the same. The dealer may have cards that are not visible to the player. Therefore, the card pile data structure shall have the following attributes:
+The state of a game also needs to be defined according to Brick. We save all the information required to describe a game state here:
 
-+ Cards. A list of card that the pile contains.
-+ Displaymode. Deciding whether only the character of the first card in the pile is visible to the player.
-
-The UI module could use displaymode to render card piles. If the character of a card is not visible, the card will be drawn as a blank card. The Move module can fetch the data in cards to calculate value and change the current game status as well. 
++ Field: two piles of cards for player and rival.
++ Total bet: the total number of bets player have.
++ Current bet: the bet set for the current game.
++ Done: whether current game has finished. If so, the player cannot do operations other than starting a new game.
++ Seed: random seed to generate random number.
++ Deal: the card deal that current game is using.
 
 ### UI module
 
-The UI interface is comprised of two card piles at the top and bottom respectively, representing the cards for both players, and two buttons at the right, one for 'add a card', the other for 'finish'. 
+The UI module is responsible for rendering user interface.
 
-A card is consisted of the border, a number and the suit of it. To render it the techniques implemented in hw2(drawing pictures and document file trees) is used. Depending on the displaymode of a card, it might should either all the 3 elements or only the border of the card(signaling it's invisible to the player).
+The UI interface is comprised of two card piles at the top and bottom respectively, representing the cards for the rival and player, and bets and buttons on the bottom to show and change game state. 
 
-To render a card pile, the rightmost card is displayed completed, and other cards only displays their left-half borders, making it covered by other cards.
+A card is consisted of the border, a number and the suit of it. Depending on the direction of a card, it might render either all the 3 elements or only the border of the card (signaling it's invisible to the player).
 
-When the game ends, the card pile at the top side will show their values and a string in the middle of the board will show 'success' or 'fail', and a bottom below it signaling to continue a new game.
+To render the card pile of the rival, the rightmost card is displayed completed, and other cards only displays their left-half borders, making it covered by other cards.
 
-### Move module
+### Logic module
 
-* Click 'start game'
+Logic module handles all the logics in the game.
 
-  two pairs of two cards will be moved from the card case to the front of the player and the dealer
-  cards are faced down in card case, all of the cards in front of the player will face up while one card of the dealer is facing down and another one is facing up
+* Click 'reset'
 
-* Click 'Hit'
+  Total bets, current bets and status of the game are all initialized to default.
+
+* Click "new"
+
+  Start a new game. Current bet and the status of the game are initialized to default.
+
+* Click "addBet"
+
+  Add 10 to current bet of a game.
+
+* Click 'hit'
 
   one card from the card case will be moved to the front of the player and place face up
 
   * when the sum of the cards is smaller than 21, the player could still press 'Hit' or 'Stand'
   * when the sum of the cards is equal to 21, turn to dealer round which is described in 4, and show the result according to the sum
-  * when the sum of the cards is larger than 21, turns to dealer round which is described in 4 and shows 'player lose, dealer win'
+  * when the sum of the cards is larger than 21, turns to dealer round which is described in 4 and shows 'You lose...'
 
-* Click 'Stand'
+* Click 'stand'
 
-  turns to dealer round which is described in 4, and show the result according to the sum
+  Turns to dealer round which is described in 4, and show the result according to the sum
 
 * Dealer's turn
 
-  the facedown card of the dealer will turn up, and the dealer would ask for another facing-up card, after the dealer get the card, the result of the game would be shown
+  The facedown card of the dealer will turn up, and the dealer may start adding new facing-up cards, after the dealer get the cards, the result of the game would be shown
 
 ## Challenges
 
@@ -107,3 +121,7 @@ When the game ends, the card pile at the top side will show their values and a s
 ## Goals expectation
 
 With current progress, we think we can finish the original proposed goals on time. But the additional goals may not be implemented.
+
+## Acknowledgement
+
+We are enlightened on how to design a card game by [this article](https://jbuckland.com/2017/12/02/solitaire.html).
