@@ -18,16 +18,13 @@ import Logic (toColor, finished, rivalScore, selfScore, getTotalBet, getCurBet)
 cardStyle :: Widget Ext -> Widget Ext -- borderwithstyle wrapper
 cardStyle = withBorderStyle unicodeRounded . border 
 
-rrGhost :: Pile -> Widget Ext -- renders a 'ghost' card with no content
-rrGhost _ = withBorderStyle ghostRounded $ border $ str "  "
-  where ghostRounded = BorderStyle 
-          { bsIntersectFull = toEnum 0x253C
-          , bsCornerTL      = toEnum 0x256D , bsCornerTR      = toEnum 0x256E
-          , bsCornerBR      = toEnum 0x256F , bsCornerBL      = toEnum 0x2570
-          , bsIntersectL    = toEnum 0x251C , bsIntersectR    = toEnum 0x2524
-          , bsIntersectT    = toEnum 0x252C , bsIntersectB    = toEnum 0x2534
-          , bsHorizontal    = ' '           , bsVertical      = ' '
-          }
+rrCard :: Maybe Card -> Widget Ext               -- renders card internals
+rrCard Nothing           = withAttr (attrName "bold")
+                         $ cardStyle             -- either a card back
+                         $ str ([toEnum 0x03BB, '='] :: String)
+rrCard (Just (Card r s)) = withAttr (attrName c) -- or a card front.
+                         $ cardStyle $ str $ show s ++ show r
+  where c = if Red == toColor s then "redCard" else "blackCard"
 
 rrDCard :: Axis -> Int -> DCard -> Widget Ext -- renders a displaycard.
 rrDCard axis idx dc = cropBy margin           -- are aware of their position
@@ -42,14 +39,6 @@ rrDCard axis idx dc = cropBy margin           -- are aware of their position
                 mkMargin EW _ FaceDown = 3
         inner  = if _facedir dc == FaceDown then Nothing else Just (_card dc)
 
-rrCard :: Maybe Card -> Widget Ext               -- renders card internals
-rrCard Nothing           = withAttr (attrName "bold")
-                         $ cardStyle             -- either a card back
-                         $ str ([toEnum 0x03BB, '='] :: String)
-rrCard (Just (Card r s)) = withAttr (attrName c) -- or a card front.
-                         $ cardStyle $ str $ show s ++ show r
-  where c = if Red == toColor s then "redCard" else "blackCard"
-
 rrDCards :: Axis -> [DCard] -> Widget Ext -- renders a pile of displaycards
 rrDCards axis dcs = nBox [  rrDCard axis idx dc 
                          | (idx,dc) <- zip idxs dcs 
@@ -59,13 +48,6 @@ rrDCards axis dcs = nBox [  rrDCard axis idx dc
 
 rrPile :: Axis -> Pile -> Widget Ext -- renders a pile of cards
 rrPile axis p = rrDCards axis $ reverse $ _cards p
-
-rrPiles :: Axis -> Axis -> [Pile] -> Widget Ext -- renders a list of piles
-rrPiles ax ax' ps = nBox [ rrPile ax' p 
-                         | (p,idx) <- zip ps [0..] 
-                         ]
-  where nBox = if ax == NS then vBox else hBox -- along its own 2ndary axis
-
 
 mkButton :: Action -> Widget Ext
 mkButton action = reportExtent (ActionX action)
