@@ -20,7 +20,7 @@ The general object of the game is easy to understand: getting a total card score
 |  card   |        score        |
 | :-----: | :-----------------: |
 |    A    |       1 or 11       |
-|   2-9   | same as card number |
+|   2-10  | same as card number |
 | J, Q, K |         10          |
 
 The player and the virtual rival both get two cards at the beginning of the game, and the player can see one of the rival's cards. The player may choose not to ask for another card and "stand" on the two cards originally dealt to them, or may ask for additional cards ("hit"), one at a time, until deciding to "stand" on the total (if it is 21 or under), or goes "bust" (if it is over 21). In the latter case, the player loses. Otherwise, the rival follows the same procedure as the player. Finally, if the rival's score goes "bust" then the player wins, otherwise the one with a higher score is the winner.
